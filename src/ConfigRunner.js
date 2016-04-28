@@ -17,7 +17,6 @@ return function ConfigRunner(){
         return this;
     };
 
-<<<<<<< HEAD
     this.oneActionDone = function(didError, callbackFn, decrement) {
       if (!decrement) {
         decrement = 1;
@@ -33,24 +32,10 @@ return function ConfigRunner(){
         this.tracking.hasFiredCallback = true;
         callbackFn({
           changes: this.tracking.changes,
-=======
-    this.oneActionDone = function(didError, callbackFn) {
-      this.tracking.waiting--;
-      if (didError) {
-        this.tracking.errored++;
-      }
-      if (this.tracking.waiting === 0) {
-        callbackFn({
->>>>>>> Make sure process terminates when done
           errors: this.tracking.errored
         });
       }
     };
-<<<<<<< HEAD
-=======
-
-    this.run = function(callbackFn) {
->>>>>>> Make sure process terminates when done
 
     this.run = function(callbackFn) {
 
@@ -85,7 +70,6 @@ return function ConfigRunner(){
 
         collection.allDone.then(function(actions){
             var deletes = [];
-<<<<<<< HEAD
             var invalidations = [];
             self.tracking = {
               waiting: actions.length,
@@ -93,12 +77,6 @@ return function ConfigRunner(){
               errored: 0
             };
             console.log(actions.length + ' change(s) to resolve');
-=======
-            this.tracking = {
-              waiting: actions.length,
-              errored: 0
-            };
->>>>>>> Make sure process terminates when done
             actions.forEach(function(obj){
                 switch(obj.action){
                     case 'delete':
@@ -109,28 +87,17 @@ return function ConfigRunner(){
                     case 'upload':
                         invalidations.push(obj.remotePath);
                         fileUtils.getContents(obj.path).then(function(contents){
-<<<<<<< HEAD
                             console.log('uploading: ' + obj.remotePath);
-                            s3Wrapper.putObject(config.bucketName,obj.remotePath,contents).then(function(){
-                              console.log('done uploading: ' + obj.remotePath);
-                              self.oneActionDone(false, callbackFn);
-                            },function(reason){
-                              console.log('error uploading: ' + obj.remotePath + ': ' + reason);
-                              self.oneActionDone(true, callbackFn);
-=======
-                            console.log('uploading: ' + obj.path);
                             let otherPutArgs = null;
                             if (config.customizePutObjectArgs) {
-                              otherPutArgs = config.customizePutObjectArgs(obj.path);
+                              otherPutArgs = config.customizePutObjectArgs(obj.remotePath);
                             }
-                            s3Wrapper.putObject(config.bucketName,obj.path,contents, undefined, otherPutArgs).then(function(){
-                                console.log('done uploading: ' + obj.path);
-                                this.oneActionDone(false, callbackFn);
+                            s3Wrapper.putObject(config.bucketName,obj.remotePath,contents, undefined, otherPutArgs).then(function(){
+                                console.log('done uploading: ' + obj.remotePath);
+                                self.oneActionDone(false, callbackFn);
                             },function(reason){
-                                console.log('error uploading: ' + obj.path);
-                                console.log(reason);
-                                this.oneActionDone(true, callbackFn);
->>>>>>> Make sure process terminates when done
+                                console.log('error uploading: ' + obj.remotePath + ': ' + reason);
+                                self.oneActionDone(true, callbackFn);
                             });
                         })
                         .catch(function(err){
@@ -155,16 +122,11 @@ return function ConfigRunner(){
                 s3Wrapper.deleteObjects(config.bucketName,deletes).then(
                     function(){
                       console.log('delete successful');
-<<<<<<< HEAD
                       self.oneActionDone(false, callbackFn, deletes.length);
-=======
-                      this.oneActionDone(false, callbackFn);
->>>>>>> Make sure process terminates when done
                     },
                     function(reason){
                       console.log('delete failed ' + reason);
                       console.log(reason);
-<<<<<<< HEAD
                       self.oneActionDone(true, callbackFn, deletes.length);
                     });
               }
@@ -183,12 +145,6 @@ return function ConfigRunner(){
             if (self.tracking.changes === 0) {
               self.oneActionDone(false, callbackFn);
             }
-=======
-                      this.oneActionDone(true, callbackFn);
-                    });
-            }
-
->>>>>>> Make sure process terminates when done
 
         });
 
