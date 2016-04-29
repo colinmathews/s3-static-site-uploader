@@ -287,8 +287,12 @@ describe('ConfigRunner', function () {
 
     });
 
+<<<<<<< HEAD
     // NOT CURRENTLY ENABLED BECAUSE NOT WORKING
     xit('will call doCreateInvalidation on cloudFrontWrapper with appropriate paths',function(done){
+=======
+    it('will call doCreateInvalidation on cloudFrontWrapper with appropriate paths',function(done){
+>>>>>>> Enable cloud front invalidation
         createConfigRunner();
         collectionInstance(0).allDoneDefer.resolve([{action:'delete',path:'myDeletePath',remotePath:'myDeletePath'}]);
         later()(function(){
