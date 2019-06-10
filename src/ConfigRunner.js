@@ -64,7 +64,11 @@ return function ConfigRunner(){
                     case 'upload':
                         fileUtils.getContents(obj.path).then(function(contents){
                             console.log('uploading: ' + obj.path);
-                            s3Wrapper.putObject(config.bucketName,obj.path,contents).then(function(){
+                            let otherPutArgs = null;
+                            if (config.customizePutObjectArgs) {
+                              otherPutArgs = config.customizePutObjectArgs(obj.path);
+                            }
+                            s3Wrapper.putObject(config.bucketName,obj.path,contents, undefined, otherPutArgs).then(function(){
                                 console.log('done uploading: ' + obj.path);
                                 this.oneActionDone(false, callbackFn);
                             },function(reason){
