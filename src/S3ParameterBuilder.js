@@ -24,15 +24,14 @@ var createParams = {
             Policy:policyString
         };
     },
-    putObject:function(bucketName, key, body, mimeType){
+    putObject:function(bucketName, key, body, mimeType, otherArgs){
         mimeType = mimeType || mime.lookup(key);
-
-        // console.log(body);
         return {
             Bucket:bucketName,
             Key: key,
             Body: body,//new Buffer(body),
-            ContentType: mimeType
+            ContentType: mimeType,
+            ...(otherArgs || {}),
         };
     },
     putBucketWebsite:function(bucketName,index,error) {
